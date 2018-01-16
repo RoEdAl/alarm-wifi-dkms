@@ -1,0 +1,32 @@
+_pkgbase=rtl8189fs
+pkgname=rtl8189fs-dkms
+pkgver=r34.569bdb9
+pkgrel=1
+pkgdesc='Kernel module for Realtek RTL8189FTV SDIO wireless devices'
+arch=('armv7h' 'aarch64')
+url='https://github.com/fifteenhex/xradio.git'
+license=('GPL')
+depends=('dkms')
+makedepends=('git' 'linux-headers')
+source=("${_pkgbase}::git+https://github.com/jwrdegoede/rtl8189ES_linux#branch=rtl8189fs"
+	'dkms.conf')
+sha256sums=('SKIP'
+            '273949bc854c1db252705f680e2e8c60c2f172434557e6d75d522e752dca4275')
+
+pkgver() {
+        cd "${srcdir}/${_pkgbase}"
+        printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+package() {
+	# Copy dkms.conf
+	install -Dm644 ${srcdir}/dkms.conf "${pkgdir}/usr/src/${_pkgbase}-${pkgver}/dkms.conf"
+
+	# Set name and version
+	sed -e "s/@_PKGBASE@/${_pkgbase}/" \
+	  -e "s/@PKGVER@/${pkgver}/" \
+	  -i "${pkgdir}/usr/src/${_pkgbase}-${pkgver}/dkms.conf"
+
+	# Copy sources
+	cp -r ${srcdir}/${_pkgbase}/* "${pkgdir}/usr/src/${_pkgbase}-${pkgver}/"
+}
