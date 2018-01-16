@@ -1,0 +1,39 @@
+_pkgbase=xradio
+pkgname=xradio-dkms
+pkgver=r113.33f4b1c
+pkgrel=1
+pkgdesc='Allwinner xradio driver'
+arch=('armv7h' 'aarch64')
+url='https://github.com/fifteenhex/xradio.git'
+license=('GPL')
+depends=('dkms')
+makedepends=('git' 'linux-headers')
+source=('git+https://github.com/fifteenhex/xradio.git'
+	'git+https://github.com/armbian/firmware.git'
+	'dkms.conf')
+sha256sums=('SKIP'
+            'SKIP'
+            '2413cd3fcf7f8364207a75a9398848e6e1c6e950313493e25d2524268c13180a')
+
+pkgver() {
+        cd "${srcdir}/xradio"
+        printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+package() {
+	# Copy dkms.conf
+	install -Dm644 ${srcdir}/dkms.conf "${pkgdir}/usr/src/${_pkgbase}-${pkgver}/dkms.conf"
+
+	# Set name and version
+	sed -e "s/@_PKGBASE@/${_pkgbase}/" \
+	  -e "s/@PKGVER@/${pkgver}/" \
+	  -i "${pkgdir}/usr/src/${_pkgbase}-${pkgver}/dkms.conf"
+
+	# Copy sources
+	cp -r ${srcdir}/xradio/* "${pkgdir}/usr/src/${_pkgbase}-${pkgver}/"
+
+	# Install firmware
+	for i in boot fw sdd; do
+		install -Dm0644 "${srcdir}/firmware/xr819/${i}_xr819.bin" "${pkgdir}/usr/lib/firmware/xr819/${i}_xr819.bin"
+	done
+}
