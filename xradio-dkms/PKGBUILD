@@ -1,7 +1,7 @@
 _pkgbase=xradio
 pkgname=xradio-dkms
 pkgver=r113.33f4b1c
-pkgrel=1
+pkgrel=2
 pkgdesc='Allwinner xradio driver'
 arch=('armv7h')
 url='https://github.com/fifteenhex/xradio.git'
@@ -13,7 +13,7 @@ source=('git+https://github.com/fifteenhex/xradio.git'
 	'dkms.conf')
 sha256sums=('SKIP'
             'SKIP'
-            '2413cd3fcf7f8364207a75a9398848e6e1c6e950313493e25d2524268c13180a')
+            '051dfd6abfd283eb72f1e6c95bc30ff9d1cf37c5227c5c577ab4ab24643d851e')
 
 pkgver() {
         cd "${srcdir}/xradio"
@@ -25,8 +25,9 @@ package() {
 	install -Dm644 ${srcdir}/dkms.conf "${pkgdir}/usr/src/${_pkgbase}-${pkgver}/dkms.conf"
 
 	# Set name and version
-	sed -e "s/@_PKGBASE@/${_pkgbase}/" \
+	sed -e "s/@PKGBASE@/${_pkgbase}/" \
 	  -e "s/@PKGVER@/${pkgver}/" \
+	  -e "s/@PKGREL@/${pkgrel}/" \
 	  -i "${pkgdir}/usr/src/${_pkgbase}-${pkgver}/dkms.conf"
 
 	# Copy sources
