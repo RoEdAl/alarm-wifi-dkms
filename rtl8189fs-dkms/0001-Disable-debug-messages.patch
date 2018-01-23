@@ -1,0 +1,25 @@
+From 922ed6a3a4903a2cfc5e62459ad2d697872fc7ce Mon Sep 17 00:00:00 2001
+From: Edmunt Pienkowsky <roed@onet.eu>
+Date: Tue, 23 Jan 2018 12:58:19 +0100
+Subject: [PATCH] Disable debug messages
+
+Signed-off-by: Edmunt Pienkowsky <roed@onet.eu>
+---
+ include/autoconf.h | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/include/autoconf.h b/include/autoconf.h
+index fc95118..099babc 100644
+--- a/include/autoconf.h
++++ b/include/autoconf.h
+@@ -223,7 +223,6 @@
+ /*
+  * Debug Related Config
+  */
+-#define CONFIG_DEBUG /* DBG_871X, etc... */
+ 
+ #ifdef CONFIG_DEBUG
+ #define DBG	1	// for ODM & BTCOEX debug
+-- 
+2.15.1
+

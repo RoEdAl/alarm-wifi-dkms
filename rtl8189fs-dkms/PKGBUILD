@@ -1,7 +1,7 @@
 _pkgbase=rtl8189fs
 pkgname=rtl8189fs-dkms
 pkgver=r34.569bdb9
-pkgrel=1
+pkgrel=2
 pkgdesc='Kernel module for Realtek RTL8189FTV SDIO wireless devices'
 arch=('armv7h' 'aarch64')
 url='https://github.com/fifteenhex/xradio.git'
@@ -9,13 +9,21 @@ license=('GPL')
 depends=('dkms')
 makedepends=('git' 'linux-headers')
 source=("${_pkgbase}::git+https://github.com/jwrdegoede/rtl8189ES_linux#branch=rtl8189fs"
+	'0001-Disable-debug-messages.patch'
 	'dkms.conf')
 sha256sums=('SKIP'
-            '273949bc854c1db252705f680e2e8c60c2f172434557e6d75d522e752dca4275')
+            '0f9370a2bbd8cccd8cec2aa2c0afe1ae3141879cf1b9dbf7806f7ee282d3478e'
+            'd6ad818b6de935095ca992a91326dbceaab20a030fc838d64d1d322042ad3d9a')
 
 pkgver() {
         cd "${srcdir}/${_pkgbase}"
         printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+	cd "${srcdir}/${_pkgbase}"
+
+	git apply ../0001-Disable-debug-messages.patch	
 }
 
 package() {
@@ -23,8 +31,9 @@ package() {
 	install -Dm644 ${srcdir}/dkms.conf "${pkgdir}/usr/src/${_pkgbase}-${pkgver}/dkms.conf"
 
 	# Set name and version
-	sed -e "s/@_PKGBASE@/${_pkgbase}/" \
+	sed -e "s/@PKGBASE@/${_pkgbase}/" \
 	  -e "s/@PKGVER@/${pkgver}/" \
+	  -e "s/@PKGREL@/${pkgrel}/" \
 	  -i "${pkgdir}/usr/src/${_pkgbase}-${pkgver}/dkms.conf"
 
 	# Copy sources
