@@ -1,7 +1,7 @@
 _pkgbase=xradio
 pkgname=xradio-dkms
-pkgver=r113.33f4b1c
-pkgrel=2
+pkgver=r120.d649e5a
+pkgrel=1
 pkgdesc='Allwinner xradio driver'
 arch=('armv7h')
 url='https://github.com/fifteenhex/xradio.git'

@@ -1,7 +1,7 @@
 _pkgbase=rtl8189fs
 pkgname=rtl8189fs-dkms
-pkgver=r34.569bdb9
-pkgrel=2
+pkgver=r37.bf81de8
+pkgrel=1
 pkgdesc='Kernel module for Realtek RTL8189FTV SDIO wireless devices'
 arch=('armv7h' 'aarch64')
 url='https://github.com/fifteenhex/xradio.git'
