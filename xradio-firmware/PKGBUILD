@@ -1,11 +1,11 @@
 # Maintainer: Edmunt Pienkowsky <roed@onet.eu>
 
 pkgname=xradio-firmware
-pkgver=20181120
+pkgver=20171007
 pkgrel=1
 pkgdesc='Allwinner xradio firmware'
 arch=('any')
-url='http://github.com/armbian/firmware/xr819'
+url='http://github.com/armbian/firmware/tree/master/xr819'
 license=('GPL')
 makedepends=('git')
 source=('git+https://github.com/armbian/firmware.git')
@@ -13,7 +13,7 @@ sha256sums=('SKIP')
 
 pkgver() {
         cd "${srcdir}/firmware"
-	git log -1 --format=%cd --date=format:%Y%m%d
+	git log -1 --format=%cd --date=format:%Y%m%d xr819
 }
 
 package() {
