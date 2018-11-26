@@ -1,0 +1,23 @@
+# Maintainer: Edmunt Pienkowsky <roed@onet.eu>
+
+pkgname=xradio-firmware
+pkgver=20181120
+pkgrel=1
+pkgdesc='Allwinner xradio firmware'
+arch=('any')
+url='http://github.com/armbian/firmware/xr819'
+license=('GPL')
+makedepends=('git')
+source=('git+https://github.com/armbian/firmware.git')
+sha256sums=('SKIP')
+
+pkgver() {
+        cd "${srcdir}/firmware"
+	git log -1 --format=%cd --date=format:%Y%m%d
+}
+
+package() {
+	for i in boot fw sdd; do
+		install -Dm0644 "${srcdir}/firmware/xr819/${i}_xr819.bin" "${pkgdir}/usr/lib/firmware/updates/xr819/${i}_xr819.bin"
+	done
+}
