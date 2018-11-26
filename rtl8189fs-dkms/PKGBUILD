@@ -1,3 +1,5 @@
+# Maintainer: Edmunt Pienkowsky <roed@onet.eu>
+
 _pkgbase=rtl8189fs
 pkgname=rtl8189fs-dkms
 pkgver=r37.bf81de8
