@@ -3,19 +3,24 @@
 _pkgbase=rtl8189fs
 pkgname=rtl8189fs-dkms
 pkgver=r37.bf81de8
-pkgrel=1
+pkgrel=2
 pkgdesc='Kernel module for Realtek RTL8189FTV SDIO wireless devices'
-arch=('armv7h' 'aarch64')
+arch=('aarch64')
 url='http://github.com/jwrdegoede/rtl8189ES_linux/tree/rtl8189fs'
 license=('GPL')
-depends=('dkms')
+depends=('dkms' 'bc')
 makedepends=('git' 'linux-headers')
-source=("${_pkgbase}::git+https://github.com/jwrdegoede/rtl8189ES_linux#branch=rtl8189fs"
+_patches=(
 	'0001-Disable-debug-messages.patch'
+	'0002-Makefile-add-ORANGEPI_ZERO_PLUS-platform.patch'
+)
+source=("${_pkgbase}::git+https://github.com/jwrdegoede/rtl8189ES_linux#branch=rtl8189fs"
+	${_patches[@]}
 	'dkms.conf')
 sha256sums=('SKIP'
-            '0f9370a2bbd8cccd8cec2aa2c0afe1ae3141879cf1b9dbf7806f7ee282d3478e'
-            'd6ad818b6de935095ca992a91326dbceaab20a030fc838d64d1d322042ad3d9a')
+            '0ffeea04836aa157e87af921596f4c1b8c6b3cb4acf1dc2cd464ff95626bee7c'
+            '205c81c6dff7cde43ff5882fd9ce0e0bd59587ddee71c67f7562ddca4fd868a9'
+            '39361432b26ac4d04bdb05c2cb062b325e2a03956e3144e24b6944b9d96f5362')
 
 pkgver() {
         cd "${srcdir}/${_pkgbase}"
@@ -25,19 +30,26 @@ pkgver() {
 prepare() {
 	cd "${srcdir}/${_pkgbase}"
 
-	git apply ../0001-Disable-debug-messages.patch	
+	for i in ${_patches[@]}; do
+		msg2 "Applying ${i}"
+		git apply ../${i}
+	done
 }
 
 package() {
 	# Copy dkms.conf
-	install -Dm644 ${srcdir}/dkms.conf "${pkgdir}/usr/src/${_pkgbase}-${pkgver}/dkms.conf"
+        local _dkms_src="${pkgdir}/usr/src/${_pkgbase}-${pkgver}"
+	install -Dm644 ${srcdir}/dkms.conf "${_dkms_src}/dkms.conf"
 
 	# Set name and version
 	sed -e "s/@PKGBASE@/${_pkgbase}/" \
 	  -e "s/@PKGVER@/${pkgver}/" \
-	  -e "s/@PKGREL@/${pkgrel}/" \
-	  -i "${pkgdir}/usr/src/${_pkgbase}-${pkgver}/dkms.conf"
+	  -i "${_dkms_src}/dkms.conf"
 
 	# Copy sources
-	cp -r ${srcdir}/${_pkgbase}/* "${pkgdir}/usr/src/${_pkgbase}-${pkgver}/"
+	cp -r ${srcdir}/${_pkgbase}/* "${_dkms_src}/"
+
+	for i in clean ifcfg-wlan0 runwpa wlan0dhcp; do
+		rm "${_dkms_src}/${i}"
+	done
 }
