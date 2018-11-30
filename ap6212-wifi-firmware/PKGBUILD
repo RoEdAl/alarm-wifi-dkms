@@ -1,0 +1,15 @@
+# Maintainer: Edmunt Pienkowsky <roed@onet.eu>
+
+pkgname=ap6212-wifi-firmware
+pkgver=1
+pkgrel=1
+pkgdesc='Armpack AP6212(A) firmware - WiFi only'
+arch=('any')
+depends=('linux>4.14' 'linux-firmware')
+url='http://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git'
+license=('GPL')
+
+package() {
+	install -d "${pkgdir}/usr/lib/firmware/brcm"
+	ln -s brcmfmac43430-sdio.AP6212.txt "${pkgdir}/usr/lib/firmware/brcm/brcmfmac43430-sdio.txt"
+}
